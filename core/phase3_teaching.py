@@ -33,95 +33,43 @@ from student_profile.curriculum.grade_curricular import get_completed, get_curre
 #  Based on lens_map.md + the original modulo*.py files.
 # ─────────────────────────────────────────────
 
-MODULE_INSTRUCTIONS: Dict[str, str] = {
+from modules.modulo0_hook     import MODIFICADOR_PASSIVO
+from modules.modulo1_context  import MODULO_1
+from modules.modulo2_causal   import MODULO_2
+from modules.modulo3_analogy  import MODULO_3
+from modules.modulo4_failure  import MODULO_4
+from modules.modulo5_test     import MODULO_5
+from modules.modulo6_transfer import MODULO_6
 
-    "boundary": (
-        "Defina o objeto com precisão antes de qualquer propriedade interna. "
-        "Deixe claro o que é e o que NÃO é. "
-        "Nunca abra com definição formal — abra com situação concreta (Módulo 1). "
-        "A definição pode aparecer DEPOIS que o problema existir na cabeça do aluno."
-    ),
+MODULE_INSTRUCTIONS = {
+    # Lens → authoritative instruction from its module
+    "boundary":                MODULO_1["instrucao_central"],
+    "mechanism":               MODULO_2["instrucao_central"],
+    "anchoring":               MODIFICADOR_PASSIVO["instrucao_central"],
+    "failure_mode":            MODULO_4["instrucao_central"],
+    "discrimination":          MODULO_5["instrucao_central"],   # test drives discrimination
+    "taxonomy_contrast":       MODULO_3["instrucao_central"],   # analogy drives contrast
+    "quant_representation":    MODULO_3["instrucao_central"],
+    "constraints":             MODULO_4["instrucao_central"],
+    "exceptions":              MODULO_4["instrucao_central"],
+    "clinical_trigger":        MODULO_6["instrucao_central"],   # transfer drives clinical logic
+    "procedure_rationale":     MODULO_2["instrucao_central"],   # causal chain for procedures
+    "examples_counterexamples":MODULO_1["instrucao_central"],
+}
 
-    "mechanism": (
-        "Explique o mecanismo como cadeia causal rastreável: "
-        "estado inicial → gatilho → etapas intermediárias → consequência local "
-        "→ consequência sistêmica → efeito observável. "
-        "Nunca pule elos causais. Cada etapa deve responder implicitamente 'por quê?'. "
-        "Feche com: 'Em outras palavras: [X] acontece porque [Y], "
-        "o que leva a [Z], resultando em [W].'"
-    ),
+# Module 1 and Module 5 instructions (always run, not lens-driven)
+MODULE_1_INSTRUCTION = MODULO_1["instrucao_central"]
+MODULE_5_INSTRUCTION = MODULO_5["instrucao_central"]
 
-    "failure_mode": (
-        "Mostre o que acontece quando uma peça falha, é bloqueada, exagerada "
-        "ou ocorre fora de contexto. "
-        "Estrutura: estado normal resumido → ponto de falha → "
-        "primeira consequência local → cascata → manifestação observável. "
-        "Diferencie ausência, excesso e desorganização. "
-        "Feche com: 'Se [X] falha, então [Y] muda primeiro, "
-        "o que leva a [Z], resultando em [W].'"
-    ),
-
-    "anchoring": (
-        "MÓDULO 0 — roda em background, sem título próprio. "
-        "Se o conceito atual se apoia diretamente em disciplina já concluída "
-        "(Morfologia, Bioquímica, Mecanismos de Agressão/Defesa, Farmacologia Básica), "
-        "insira ponte de 1–2 frases fluidas conectando o conteúdo novo à estrutura antiga. "
-        "Se não houver encaixe perfeito, ignore. "
-        "NUNCA pare a explicação para dar revisão teórica."
-    ),
-
-    "discrimination": (
-        "Identifique o vizinho mais próximo do conceito — "
-        "o que um estudante confundiria com ele. "
-        "Mostre o único discriminador que separa os dois. "
-        "Prefira contraste direto a listas de características."
-    ),
-
-    "taxonomy_contrast": (
-        "Nunca liste os tipos em sequência sem compará-los entre si. "
-        "Para cada par de tipos, mostre o que muda estruturalmente de um para o outro "
-        "e por quê essa diferença importa clinicamente ou funcionalmente. "
-        "Taxonomias são aprendidas por fronteiras e contrastes, não por listas."
-    ),
-
-    "quant_representation": (
-        "Antes de qualquer número ou equação, descreva o processo como "
-        "diagrama ou timeline: quais são os eixos, o que cada região representa, "
-        "o que acontece nos extremos. "
-        "O aluno deve conseguir desenhar o gráfico na cabeça antes de ver os valores."
-    ),
-
-    "constraints": (
-        "Mostre sob quais condições a regra geral deixa de valer. "
-        "Frasear como: 'Este modelo funciona quando [condição]. "
-        "Se [condição muda], o comportamento esperado é diferente porque [razão].'"
-    ),
-
-    "exceptions": (
-        "Traga o caso especial ou população que inverte a expectativa padrão. "
-        "Contextualize por que a exceção faz sentido mecanisticamente "
-        "— não como curiosidade, mas como teste do modelo."
-    ),
-
-    "clinical_trigger": (
-        "Formule a regra de decisão como If→Then explícito: "
-        "'Se [dado clínico X] + [dado Y], então [conduta Z] — porque [mecanismo].' "
-        "O foco é a lógica de decisão, não a lista de achados. "
-        "Inclua o discriminador principal que guia a escolha entre diferenciais."
-    ),
-
-    "procedure_rationale": (
-        "Para cada etapa relevante do procedimento, explique: "
-        "o que essa etapa previne ou garante? "
-        "O que acontece se for omitida ou feita errada? "
-        "Procedimentos sem o porquê de cada passo são memorizados, não entendidos."
-    ),
-
-    "examples_counterexamples": (
-        "Dê 1 exemplo concreto do conceito e 1 contraexemplo que parece igual mas não é. "
-        "O contraexemplo deve ser próximo o suficiente para ser uma confusão real, "
-        "não um caso obviamente diferente."
-    ),
+# Competency targets per section type (backward design)
+COMPETENCY_TARGETS = {
+    "definition": MODULO_5["sinal_que_funcionou"],
+    "mechanism":  MODULO_2["sinal_que_funcionou"],
+    "taxonomy":   MODULO_3["sinal_que_funcionou"],
+    "quant_process":      MODULO_2["sinal_que_funcionou"],
+    "clinical_decision":  MODULO_6["sinal_que_funcionou"],
+    "procedure":          MODULO_4["sinal_que_funcionou"],
+    "mixed":              MODULO_5["sinal_que_funcionou"],
 }
 
 
